@@ -36,14 +36,25 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant === 'new-release' && (
+            <ReleaseFlag>Just Released!</ReleaseFlag>
+          )}
+          {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          {variant === 'on-sale' ? (
+            <StrikeThroughPrice>{formatPrice(price)}</StrikeThroughPrice>
+          ) : (
+            <Price>{formatPrice(price)}</Price>
+          )}
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {variant === 'on-sale' && (
+            <SalePrice>{formatPrice(salePrice)}</SalePrice>
+          )}
         </Row>
       </Wrapper>
     </Link>
@@ -57,14 +68,37 @@ const Link = styled.a`
 
 const Wrapper = styled.article``;
 
+const Flag = styled.div`
+  padding: 10px;
+  color: white;
+  position: absolute;
+  right: -4px;
+  top: 12px;
+  font-size: ${14 / 16}rem;
+  border-radius: 16px 4px;
+`;
+
+const SaleFlag = styled(Flag)`
+  background-color: hotpink;
+`;
+
+const ReleaseFlag = styled(Flag)`
+  background-color: purple;
+`;
+
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius: 16px 4px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -73,6 +107,11 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span``;
+
+const StrikeThroughPrice = styled(Price)`
+  text-decoration: line-through;
+  color: ${COLORS.gray[700]};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
